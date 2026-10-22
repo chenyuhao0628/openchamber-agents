@@ -1,0 +1,22 @@
+.ag-field .oc-sdk-field-label { font-size: 12px; }
+.ag-field .oc-sdk-input { font-size: 13px; min-height: 36px; }
+.ag-editor textarea { min-height: 220px; max-height: 60vh; resize: vertical; line-height: 1.65; tab-size: 2; }
+.ag-editor .oc-sdk-field-note { font-variant-numeric: tabular-nums; }
+.ag .oc-sdk-trigger-value { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ag .oc-sdk-select { min-width: 0; }
+.ag .oc-sdk-trigger { width: 100%; min-width: 0; min-height: 36px; }
+.ag-details { border-top: 1px solid var(--oc-border); padding-top: 12px; }
+.ag-details summary { cursor: pointer; color: var(--oc-muted); font-size: 12px; padding: 4px 0; }
+.ag-details .ext-actions { margin-top: 8px; }
+.ag-guard { border: 1px solid var(--oc-warning); border-radius: var(--oc-radius); padding: 12px; }
+.ag-guard p { margin: 0 0 8px; }
+.ag-review-title { font-size: 14px; margin: 0; overflow-wrap: anywhere; }
+.ag-diff { border: 1px solid var(--oc-border); border-radius: var(--oc-radius); overflow: auto; max-height: 48vh; font: 11px/1.65 var(--oc-mono); }
+.ag-diff-line { display: grid; grid-template-columns: 30px 30px 16px minmax(0, 1fr); min-width: 0; }
+.ag-diff-line span { padding: 1px 3px; text-align: right; color: var(--oc-muted); user-select: none; }
+.ag-diff-line code { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; padding: 1px 8px 1px 0; }
+.ag-diff-line[data-kind="add"] { background: color-mix(in srgb, var(--oc-success) 10%, transparent); color: var(--oc-success-text); }
+.ag-diff-line[data-kind="remove"] { background: color-mix(in srgb, var(--oc-error) 10%, transparent); color: var(--oc-error-text); }
+.ag-diff-gap { margin: 0; padding: 5px 12px; color: var(--oc-muted); font: 11px/1.5 var(--oc-font); background: var(--oc-hover); }
+.ag-preview { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.65 var(--oc-mono); max-height: 40vh; overflow: auto; border: 1px solid var(--oc-border); border-radius: var(--oc-radius); padding: 12px; }
+.ag-section .ext-notice { margin: 8px 0 4px; }

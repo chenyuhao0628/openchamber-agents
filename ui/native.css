@@ -1,0 +1,31 @@
+/* Shared foundation for OpenChamber extensions. Colors and fonts belong to the host. */
+:root {
+  --ext-bg: var(--surface-background, var(--oc-bg, transparent));
+  --ext-space-1: 4px;
+  --ext-space-2: 8px;
+  --ext-space-3: 12px;
+  --ext-space-4: 16px;
+  --ext-space-6: 24px;
+  --ext-text-small: 11px;
+  --ext-text-body: 13px;
+  --ext-text-title: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--ext-bg); }
+body { overflow: hidden; }
+#root { height: 100%; }
+[hidden] { display: none !important; }
+button, input, textarea, select { font: inherit; }
+.ext { color: var(--oc-fg); font-family: var(--oc-font); font-size: var(--ext-text-body); line-height: 1.5; }
+.ext button:focus-visible, .ext [tabindex]:focus-visible { outline: 2px solid var(--oc-focus); outline-offset: 2px; }
+.ext-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ext-space-2); }
+.ext-muted { color: var(--oc-muted); font-size: var(--ext-text-small); }
+.ext-notice { margin: 0; padding: 10px 12px; border-radius: var(--oc-radius, 6px); font-size: 12px; overflow-wrap: anywhere; background: color-mix(in srgb, var(--oc-info) 7%, var(--ext-bg)); color: var(--oc-info-text); }
+.ext-notice[data-tone="success"] { background: color-mix(in srgb, var(--oc-success) 7%, var(--ext-bg)); color: var(--oc-success-text); }
+.ext-notice[data-tone="warning"] { background: color-mix(in srgb, var(--oc-warning) 8%, var(--ext-bg)); color: var(--oc-warning-text); }
+.ext-notice[data-tone="error"] { background: color-mix(in srgb, var(--oc-error) 7%, var(--ext-bg)); color: var(--oc-error-text); }
+.ext .oc-sdk-btn[data-size="sm"], .ext .oc-sdk-tab { font-size: 12px; }
+.ext .oc-sdk-field-note { font-size: var(--ext-text-small); }
+@media (prefers-reduced-motion: reduce) {
+  .ext *, .ext *::before, .ext *::after { animation: none !important; transition: none !important; }
+}
