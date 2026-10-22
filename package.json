@@ -1,6 +1,6 @@
 {
   "name": "openchamber-agents",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "type": "module",
   "description": "OpenChamber 全局规则方案：编辑、差异预览、切换与备份恢复。",
@@ -19,7 +19,7 @@
       "statusSection": {
         "entry": "panel/section.html",
         "title": "全局规则",
-        "height": 64
+        "height": 56
       },
       "filesystem": [
         "~/.config/opencode/AGENTS.md",

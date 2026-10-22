@@ -230,10 +230,10 @@ button, input, textarea, select { font: inherit; }
 .ag-path { margin: 12px 0 0; overflow-wrap: anywhere; }
 .ag-section { padding: 4px 0 0; }
 .ag-section p { margin: 0; }
-.ag-status-row { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 12px; min-height: 24px; }
+.ag-status-row { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 12px; min-width: 0; min-height: 20px; }
 .ag-status-label { color: var(--oc-muted); font-size: 12px; }
 .ag-status-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; font-size: 12px; font-weight: 500; }
-.ag-status-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+.ag-status-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .ag-status-footer .ext-actions { flex: none; gap: 4px; }
 .ag-status-footer .oc-sdk-btn { min-height: 28px; padding: 0 6px; font-weight: 400; }
 html[data-oc-surface="status"] { --ext-bg: color-mix(in srgb, var(--surface-muted, transparent) 40%, var(--surface-background, transparent)); height: auto; }
