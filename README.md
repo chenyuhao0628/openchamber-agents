@@ -1,4 +1,40 @@
-# 规则方案 · openchamber-agents
+# openchamber-agents
+
+English | [简体中文](#简体中文)
+
+## English
+
+**AGENTS.md Manager** keeps multiple global `AGENTS.md` rule profiles and switches between them safely. Each activation shows a line-by-line diff, backs up the current file, writes atomically and reads it back. A compact Work Status section shows the active profile.
+
+### Highlights
+
+- Library of rule profiles with create, duplicate, import, archive and export.
+- Line-by-line diff before activation; automatic backup and restore.
+- Detects external edits, corrupted libraries and permission errors instead of silently overwriting.
+- No background service, model calls, session sending or network requests.
+- Only touches `~/.config/opencode/AGENTS.md` and `~/.config/openchamber/agents-manager/**`.
+
+### Screenshot
+
+<img src="docs/screenshots/panel.jpg" alt="AGENTS.md Manager panel" width="420">
+
+*Synthetic preview with sample rules. No real global rules are read or changed.*
+
+### Install
+
+In OpenChamber, open **Settings → Extensions → Add extension** and paste:
+
+```text
+https://github.com/chenyuhao0628/openchamber-agents
+```
+
+Requires OpenChamber **2.4.0 or newer**. This extension manages rule text, not OpenCode's agent selector.
+
+> The panel UI is currently Chinese. The full Chinese documentation is below.
+
+---
+
+## 简体中文
 
 当前版本 **0.1.6**，核对日期 **2026-10-22**。在 OpenChamber 中管理多个全局 `AGENTS.md` 方案：编辑、差异预览、启用、备份恢复。支持右侧独立面板和工作状态摘要，跟随宿主主题。
 
@@ -105,5 +141,9 @@ UI 规则见本仓库的 `ui/native.css`；宿主重载与检查记录以本页�
 0.1.6 将工作状态摘要的状态行压缩到 20px 高，去掉底栏额外上边距，并把清单声明高度从 64px 调整为 56px；与内置提示词扩展保持相同的行高、文字层级和操作位置。
 
 0.1.1 使用宿主支持的 `quill-pen` 羽毛笔图标；工作状态摘要改为两行：左侧标签与读取时间，右侧方案名与操作，去掉重复说明及默认段落间距。无需新权限。当前已安装并启用；初始方案内容与原全局文件一致，接入验证没有改写真实全局规则。
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 返回[本仓库首页](README.md)。
