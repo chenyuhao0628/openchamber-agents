@@ -13,6 +13,7 @@ English | [简体中文](#简体中文)
 - Detects external edits, corrupted libraries and permission errors instead of silently overwriting.
 - No background service, model calls, session sending or network requests.
 - Only touches `~/.config/opencode/AGENTS.md` and `~/.config/openchamber/agents-manager/**`.
+- Uses SDK 2.7.0; on OpenChamber 2.7.0 non-Latin-1 project paths work through the fixed directory-header encoding.
 
 - Panel and Work Status copy follow the host language (Simplified Chinese or English).
 ### Screenshot
@@ -29,7 +30,7 @@ In OpenChamber, open **Settings → Extensions → Add extension** and paste:
 https://github.com/chenyuhao0628/openchamber-agents
 ```
 
-Requires OpenChamber **2.4.0 or newer**. This extension manages rule text, not OpenCode's agent selector.
+Requires OpenChamber **2.4.0 or newer**; **2.7.0** is recommended for projects with non-Latin-1 folder names. This extension manages rule text, not OpenCode's agent selector.
 
 > The panel and Work Status copy follow the host language (Simplified Chinese or English). The full Chinese documentation is below.
 
@@ -37,7 +38,7 @@ Requires OpenChamber **2.4.0 or newer**. This extension manages rule text, not O
 
 ## 简体中文
 
-当前版本 **0.1.7**，核对日期 **2026-11-04**。面板文案跟随宿主语言在简体中文和英文间切换。在 OpenChamber 中管理多个全局 `AGENTS.md` 方案：编辑、差异预览、启用、备份恢复。支持右侧独立面板和工作状态摘要，跟随宿主主题。
+当前版本 **0.1.8**，核对日期 **2026-11-08**。面板文案跟随宿主语言在简体中文和英文间切换。在 OpenChamber 中管理多个全局 `AGENTS.md` 方案：编辑、差异预览、启用、备份恢复。支持右侧独立面板和工作状态摘要，跟随宿主主题。
 
 > 本仓库只发布扩展框架，不包含任何实际全局规则内容。首次打开会读取本机现有的 `~/.config/opencode/AGENTS.md` 作为方案来源。
 
@@ -68,7 +69,7 @@ https://github.com/chenyuhao0628/openchamber-agents
 
 分享给其他用户时，在扩展目录执行 `npm run share`，构建后生成 `dist/openchamber-agents-<版本>.zip`；接收方在 **设置 → 扩展 → 添加扩展** 中选择该 zip 即可安装（无需解压），zip 内附 `安装说明.md` 与完整 README。发行包只包含宿主安装所需的清单、两个 HTML 入口、两个面板脚本与两份说明文档，不含源码、测试与依赖。
 
-清单保守要求 OpenChamber `>=2.4.0`，开发 SDK 固定 `2.0.3`。本机验证环境为 OpenChamber 2.4.0 / OpenCode v2.0.32；SDK 版本与宿主版本是两回事，版本声明不代表所有版本均验证。此扩展没有后台服务、模型调用、会话发送和网络请求权限。若宿主提示文件授权不足，在扩展设置检查声明范围。
+清单保守要求 OpenChamber `>=2.4.0`，开发 SDK 为 `2.7.0`。本机此前验证环境为 OpenChamber 2.4.0；2.7.0 已修复非 Latin-1 项目路径的目录请求头，建议在 2.7.0 上使用。SDK 版本与宿主版本是两回事，版本声明不代表所有版本均验证。此扩展没有后台服务、模型调用、会话发送和网络请求权限。若宿主提示文件授权不足，在扩展设置检查声明范围。
 
 ## 日常使用
 
@@ -100,20 +101,16 @@ https://github.com/chenyuhao0628/openchamber-agents
 
 ### 打开或重新读取时出现 `Extension operation failed.`
 
-2026-10-19 已用合成扩展、示例路径和通用复现提交上游 [Issue #5179](https://github.com/openchamber/openchamber/issues/5179)，与无项目面板导航的 [Issue #5180](https://github.com/openchamber/openchamber/issues/5180) 相互关联。未上传真实规则、项目路径、日志或截图；本地提示改进不代表上游缺陷已修复。
+2026-10-19 已用合成扩展、示例路径和通用复现提交上游 [Issue #5179](https://github.com/openchamber/openchamber/issues/5179)。当时在 OpenChamber 2.4.0 上复现：项目路径含中文等超出 Latin-1 范围的字符时，宿主把目录原文放入 `x-opencode-directory` 请求头，浏览器的 `Headers.set` 在发送前抛出异常。错误本身不表示规则文件损坏。
 
-2026-10-19 在本机 OpenChamber 2.4.0 复现：当前项目路径含中文等超出 Latin-1 范围的字符时，宿主会把目录原文放入 `x-opencode-directory` 请求头。浏览器的 `Headers.set` 在发送请求前抛出异常，消息桥只返回这句通用英文错误。访问全局文件也会附带该目录，因此同样受影响；错误本身不表示规则文件损坏。此前加载过的标题与内容可能仍留在页面中，不代表本次读取成功。
+**OpenChamber 2.7.0 已修复这条路径。** 2.7.0 的 `guestFileOperation` 改为把目录作为普通 header 条目交给 `runtimeFetch`；`runtimeFetch` 对非 Latin-1 值做 `encodeURIComponent`，并附加 `x-opencode-directory-encoding: uri` 供服务端解码。源码位置：[2.7.0 files.ts](https://github.com/openchamber/openchamber/blob/v2.7.0/packages/ui/src/lib/guests/files.ts) 与 [runtime-fetch.ts](https://github.com/openchamber/openchamber/blob/v2.7.0/packages/ui/src/lib/runtime-fetch.ts)。0.1.8 已升级到 SDK 2.7.0；在 2.7.0 宿主上，中文项目路径应恢复正常读写。真实宿主仍建议用含中文路径的新会话做一次人工复测，不能只凭源码核对宣告所有远程/旧版环境都通过。
 
-0.1.5 会指出失败的是全局规则、方案库还是备份，并在这一兼容情形下显示中文原因。重新读取核心文件失败时保留已有内容和草稿，明确标注仍为上次读取结果；写入失败不鼓励盲目重复提交。只记录错误类型与目录字符类别，不输出目录原文或规则内容。
-
-**这是错误诊断与提示改进，宿主的中文目录兼容问题仍存在。** SDK 2.0.3 的文件方法不允许扩展覆盖当前目录或请求头。临时可以在无项目会话中从右侧「规则方案」图标进入，也可在路径不含这类字符的现有项目中使用；无需重命名项目或修改规则文件。无项目时请使用侧栏图标，工作状态「管理」的另一个宿主限制见[已知限制](#已知限制)。
-
-依据：官方 [v2.4.0 文件代理](https://github.com/openchamber/openchamber/blob/v2.4.0/packages/ui/src/lib/guests/files.ts)、[消息桥](https://github.com/openchamber/openchamber/blob/v2.4.0/packages/ui/src/lib/guests/host-bridge.ts) 与本机原始资源的只读核对。用合成路径执行该请求头构造逻辑时，无目录和 ASCII 目录通过，中文目录在网络调用前抛出 `TypeError`。本次未修改已安装宿主；重载及读取前后真实全局文件、方案库和备份的内容校验一致。
+0.1.5 保留的错误诊断仍有意义：它会指出失败的是全局规则、方案库还是备份，并在旧宿主上显示中文原因。重新读取核心文件失败时保留已有内容和草稿，明确标注仍为上次读取结果；写入失败不鼓励盲目重复提交。只记录错误类型与目录字符类别，不输出目录原文或规则内容。
 
 ## 已知限制
 
 - 无项目会话中，工作状态「管理」入口可能无响应；请直接点击右侧「规则方案」图标。
-- 项目路径含中文等字符时，宿主文件请求可能失败；可改用无项目会话，或路径不含这类字符的项目。
+- 2.7.0 之前的宿主仍可能在中文等非 Latin-1 项目路径下失败；2.7.0 已修复，建议升级后复测。
 
 ## 开发与验证
 
