@@ -1,7 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRepository, parseLibrary, validateDraft } from '../src/core/repository.ts';
-import { ConflictError, DATA_DIR, GLOBAL_PATH, LIBRARY_PATH, matchedProfile, type Files } from '../src/core/types.ts';
+import {
+  ConflictError,
+  DATA_DIR,
+  GLOBAL_PATH,
+  LIBRARY_PATH,
+  countLines,
+  estimateTokens,
+  extractMarkdownHeadings,
+  matchedProfile,
+  type Files,
+} from '../src/core/types.ts';
 
 const fixture = (initial: string | null = '# 团队规则\n先运行检查。\n') => {
   const disk = new Map<string, string>(); if (initial !== null) disk.set(GLOBAL_PATH, initial);
@@ -111,4 +121,41 @@ test('validation rejects malformed files, traversal, duplicate names and oversiz
 test('exports contain exact saved plain text without changing the global file', async () => {
   const f = fixture(); const loaded = await f.repo.load(true); const profile = loaded.library.profiles[0]; f.writes.length = 0;
   const path = await f.repo.exportProfile(profile); assert.equal(f.disk.get(path), profile.content); assert.ok(path.startsWith(`${DATA_DIR}/exports/`)); assert.deepEqual(f.writes, [path]);
+});
+test('readonly diff reviews are rejected by apply without modifying global rules or backups', async () => {
+  const f = fixture(); const before = f.disk.get(GLOBAL_PATH); const loaded = await f.repo.load(true); f.writes.length = 0;
+  await assert.rejects(f.repo.apply(loaded, {
+    name: '草稿对比',
+    content: '# 新内容\n',
+    before: loaded.global,
+    source: 'draft-global',
+    readonly: true,
+  }), /只读差异对比/);
+  assert.equal(f.disk.get(GLOBAL_PATH), before);
+  assert.deepEqual(f.writes, []);
+});
+test('markdown heading extraction skips fenced code blocks and estimates tokens on synthetic text', () => {
+  const sample = [
+    '# 总则',
+    '保持类型检查通过。',
+    '```bash',
+    '# 这是代码块里的注释，不是章节标题',
+    'npm test',
+    '```',
+    '## 验证规范 ###',
+    '~~~',
+    '### 同样忽略波浪线代码块',
+    '~~~',
+    '### 交付说明',
+  ].join('\n');
+  const headings = extractMarkdownHeadings(sample);
+  assert.deepEqual(headings.map(item => ({ level: item.level, title: item.title, line: item.line })), [
+    { level: 1, title: '总则', line: 1 },
+    { level: 2, title: '验证规范', line: 7 },
+    { level: 3, title: '交付说明', line: 11 },
+  ]);
+  assert.equal(sample.slice(headings[1].offset, headings[1].offset + 7), '## 验证规范');
+  assert.equal(countLines(sample), 11);
+  assert.equal(estimateTokens(''), 0);
+  assert.ok(estimateTokens(sample) > 20);
 });

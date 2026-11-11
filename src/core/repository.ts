@@ -80,6 +80,9 @@ export const createRepository = (files: Files, now = Date.now, uuid: () => strin
     return { name: profile.name, content: profile.content, before: await readGlobal(), source: 'profile', profileId: profile.id };
   };
   const apply = async (loaded: Loaded, review: Review): Promise<{ global: Snapshot; backup: string | null }> => {
+    if (review.readonly) {
+      throw new Error(t('只读差异对比不能直接写入，请先保存方案再预览启用。'));
+    }
     if (review.source === 'profile') {
       await sameRaw(files, loaded.raw, t);
       const profile = loaded.library.profiles.find(item => item.id === review.profileId && !item.archived);

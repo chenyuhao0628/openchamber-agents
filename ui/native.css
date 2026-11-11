@@ -9,23 +9,88 @@
   --ext-text-small: 11px;
   --ext-text-body: 13px;
   --ext-text-title: 14px;
+  --oc-scrollbar-thumb: color-mix(in srgb, var(--oc-muted, currentColor) 18%, transparent);
+  --oc-scrollbar-thumb-hover: color-mix(in srgb, var(--oc-muted, currentColor) 36%, transparent);
 }
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+:hover, [data-oc-scrolling] {
+  scrollbar-color: var(--oc-scrollbar-thumb) transparent;
+}
+@supports selector(::-webkit-scrollbar) {
+  *, :hover, [data-oc-scrolling] { scrollbar-width: auto; scrollbar-color: auto; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; background: transparent; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+    min-width: 24px;
+    min-height: 24px;
+  }
+  :hover::-webkit-scrollbar-thumb, [data-oc-scrolling]::-webkit-scrollbar-thumb { background: var(--oc-scrollbar-thumb); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--oc-scrollbar-thumb-hover); }
+  ::-webkit-scrollbar-corner { background: transparent; }
+  ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+}
+@media (forced-colors: active) {
+  *, :hover, [data-oc-scrolling] { scrollbar-color: auto; }
+  ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:hover { background: CanvasText; }
+}
 html, body { margin: 0; height: 100%; background: var(--ext-bg); }
 body { overflow: hidden; }
 #root { height: 100%; }
 [hidden] { display: none !important; }
 button, input, textarea, select { font: inherit; }
-.ext { color: var(--oc-fg); font-family: var(--oc-font); font-size: var(--ext-text-body); line-height: 1.5; }
-.ext button:focus-visible, .ext [tabindex]:focus-visible { outline: 2px solid var(--oc-focus); outline-offset: 2px; }
+.ext {
+  color: var(--oc-fg);
+  font-family: var(--oc-font);
+  font-size: var(--ext-text-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.ext-container { container-type: inline-size; }
+.ext :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--oc-focus, CanvasText);
+  outline-offset: 2px;
+}
+.ext button:not(:disabled) {
+  transition: background-color 140ms ease-out, border-color 140ms ease-out, color 140ms ease-out, opacity 140ms ease-out, scale 120ms ease-out;
+}
+.ext button:not(:disabled):active { scale: 0.985; }
 .ext-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--ext-space-2); }
 .ext-muted { color: var(--oc-muted); font-size: var(--ext-text-small); }
-.ext-notice { margin: 0; padding: 10px 12px; border-radius: var(--oc-radius, 6px); font-size: 12px; overflow-wrap: anywhere; background: color-mix(in srgb, var(--oc-info) 7%, var(--ext-bg)); color: var(--oc-info-text); }
-.ext-notice[data-tone="success"] { background: color-mix(in srgb, var(--oc-success) 7%, var(--ext-bg)); color: var(--oc-success-text); }
-.ext-notice[data-tone="warning"] { background: color-mix(in srgb, var(--oc-warning) 8%, var(--ext-bg)); color: var(--oc-warning-text); }
-.ext-notice[data-tone="error"] { background: color-mix(in srgb, var(--oc-error) 7%, var(--ext-bg)); color: var(--oc-error-text); }
+.ext-notice {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--oc-radius, 6px);
+  border: 1px solid color-mix(in srgb, var(--oc-info) 20%, transparent);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  background: color-mix(in srgb, var(--oc-info) 7%, var(--ext-bg));
+  color: var(--oc-info-text);
+}
+.ext-notice[data-tone="success"] {
+  border-color: color-mix(in srgb, var(--oc-success) 22%, transparent);
+  background: color-mix(in srgb, var(--oc-success) 7%, var(--ext-bg));
+  color: var(--oc-success-text);
+}
+.ext-notice[data-tone="warning"] {
+  border-color: color-mix(in srgb, var(--oc-warning) 24%, transparent);
+  background: color-mix(in srgb, var(--oc-warning) 8%, var(--ext-bg));
+  color: var(--oc-warning-text);
+}
+.ext-notice[data-tone="error"] {
+  border-color: color-mix(in srgb, var(--oc-error) 22%, transparent);
+  background: color-mix(in srgb, var(--oc-error) 7%, var(--ext-bg));
+  color: var(--oc-error-text);
+}
 .ext .oc-sdk-btn[data-size="sm"], .ext .oc-sdk-tab { font-size: 12px; }
 .ext .oc-sdk-field-note { font-size: var(--ext-text-small); }
 @media (prefers-reduced-motion: reduce) {
   .ext *, .ext *::before, .ext *::after { animation: none !important; transition: none !important; }
+  .ext button:not(:disabled):active { scale: none; }
 }
