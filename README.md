@@ -15,6 +15,7 @@ English | [简体中文](#简体中文)
 - No background service, model calls, session sending or network requests.
 - Only touches `~/.config/opencode/AGENTS.md` and `~/.config/openchamber/agents-manager/**`.
 - Uses SDK 2.7.0; on OpenChamber 2.7.0 non-Latin-1 project paths work through the fixed directory-header encoding.
+- Work Status header controls republish after a project or session directory change, so Refresh / Manage stay visible without folding the section.
 
 - Panel and Work Status copy follow the host language (Simplified Chinese or English).
 ### Screenshot
@@ -39,7 +40,9 @@ Requires OpenChamber **2.4.0 or newer**; **2.7.0** is recommended for projects w
 
 ## 简体中文
 
-当前版本 **0.2.0**，核对日期 **2026-11-11**。面板文案跟随宿主语言在简体中文和英文间切换。在 OpenChamber 中管理多个全局 `AGENTS.md` 方案：编辑、Token 预算估算、Markdown 大纲快速跳转、未匹配实际全局规则时的纳管与只读对比、差异预览、启用、备份恢复。支持右侧独立面板和工作状态摘要，跟随宿主主题。
+当前版本 **0.2.1**，核对日期 **2026-11-12**。面板文案跟随宿主语言在简体中文和英文间切换。在 OpenChamber 中管理多个全局 `AGENTS.md` 方案：编辑、Token 预算估算、Markdown 大纲快速跳转、未匹配实际全局规则时的纳管与只读对比、差异预览、启用、备份恢复。支持右侧独立面板和工作状态摘要，跟随宿主主题。
+
+0.2.1 修复工作状态分区的标题行控件在目录变化（切换项目、会话目录解析完成）后不重新发布、导致「刷新 / 管理」偶尔消失并需折叠重开的问题；现在会在宿主重新发送 `ready` 或 `directory` 时重新发布控件，并按 `features.statusControls` 判断宿主支持。
 
 > 本仓库只发布扩展框架，不包含任何实际全局规则内容。首次打开会读取本机现有的 `~/.config/opencode/AGENTS.md` 作为方案来源。
 

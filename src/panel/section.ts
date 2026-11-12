@@ -116,6 +116,12 @@ host.onStatusControl(event => {
   else if (event.id === 'manage') triggerManage();
 });
 
+host.onDirectory(() => {
+  if (!initialized) return;
+  statusControlSignature = '';
+  syncStatusControls();
+});
+
 new ResizeObserver(() => {
   void host.setHeight(Math.ceil(app.getBoundingClientRect().height)).catch(() => {});
 }).observe(app);
@@ -129,15 +135,17 @@ host.onReady(context => {
   button.update({ label: t('刷新') });
   manage.update({ label: t('管理') });
   manageButton.setAttribute('aria-label', t('管理规则方案'));
-  statusControlsSupported = context.surface === 'status';
+  statusControlsSupported = context.surface === 'status' && context.features?.statusControls === true;
   if (!initialized) {
     initialized = true;
     syncStatusControls();
     void refresh();
-  } else if (changed) {
+  } else {
     statusControlSignature = '';
     syncStatusControls();
-    note.textContent = t('全局 AGENTS.md');
-    void refresh();
+    if (changed) {
+      note.textContent = t('全局 AGENTS.md');
+      void refresh();
+    }
   }
 });
